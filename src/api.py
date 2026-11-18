@@ -1,10 +1,8 @@
 import joblib
 import pandas as pd
 from typing import Literal
-from fastapi import FastAPI
 from pydantic import BaseModel, Field
 from src.train import MODEL_PATH
-from fastapi.middleware.cors import CORSMiddleware
 
 artifact = joblib.load(MODEL_PATH)
 pipeline, THRESHOLD = artifact['pipeline'], artifact['threshold']
@@ -34,20 +32,7 @@ class Customer(BaseModel):
 def segment(p: float) -> str:
     return 'High' if p >= THRESHOLD else 'Medium' if p >= 0.40 else 'Low'
 
-app = FastAPI(title='Customer Churn API')
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=['http://localhost:5173', 'http://127.0.0.1:5173'],
-    allow_methods=['*'],
-    allow_headers=['*'],
-)
-
-@app.get('/health')
-def health():
-    return {'status': 'ok', 'threshold': THRESHOLD}
-
-@app.post('/predict')
-def predict(customer: Customer):
+def score(customer: Customer) -> dict:
     df = pd.DataFrame([customer.model_dump()])
     p = float(pipeline.predict_proba(df)[0, 1])
     return {
