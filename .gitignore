@@ -1,0 +1,39 @@
+# Virtual environment
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Node / frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+npm-debug.log*
+
+# Data (large or re-downloadable)
+data/raw/
+data/processed/
+
+# Trained models: keep only the final one the API needs
+models/*.joblib
+models/*.pkl
+!models/churn_model.joblib
+
+# Secrets and local config
+.env
+.env.*
+
+# Vercel
+.vercel/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
